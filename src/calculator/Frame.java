@@ -45,9 +45,9 @@ public class Frame extends JFrame implements ActionListener{
 			box;
 	
 	JLabel	windowLabel,
-			windowHelp;
+			helpBoxLabel;
 	
-	String	operator="", windowHelpContent="", windowText="0";
+	String	operator="", helpBoxText="", windowText="0";
 	
 	double	windowContent=0;
 	
@@ -148,10 +148,10 @@ public class Frame extends JFrame implements ActionListener{
 		windowLabel.setBackground(new Color(0x333333));
 		windowLabel.setOpaque(true);
 		
-		windowHelp = new JLabel("", SwingConstants.RIGHT);
-		windowHelp.setFont(new Font("Serif", Font.PLAIN, 20));
+		helpBoxLabel = new JLabel("", SwingConstants.RIGHT);
+		helpBoxLabel.setFont(new Font("Serif", Font.PLAIN, 20));
 		
-		window.add(windowHelp);
+		window.add(helpBoxLabel);
 		window.add(windowLabel);
 		this.add(window);
 		this.add(box);
@@ -164,114 +164,112 @@ public class Frame extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==zeroButton) {
-			windowContent = Integer. parseInt(windowText);
 			if(windowText!="0") {windowText+=0;}
-			//windowContent = windowContent*10 + 0;
-			//numberInWindowIs0 = false;
-			updateWindow();
+			refreshWindow();
 		}
 		if(e.getSource()==oneButton) {
+			hideStartZero();
 			windowText+=1;
-			//windowContent = windowContent*10 + 1;
-			updateWindow();
+			refreshWindow();
 		}
 		if(e.getSource()==twoButton) {
+			hideStartZero();
 			windowText+=2;
-			//windowContent = windowContent*10 + 2;
-			updateWindow();
+			refreshWindow();
 		}
 		if(e.getSource()==threeButton) {
+			hideStartZero();
 			windowText+=3;
-			//windowContent = windowContent*10 + 3;
-			updateWindow();
+			refreshWindow();
 		}
 		if(e.getSource()==fourButton) {
+			hideStartZero();
 			windowText+=4;
-			//windowContent = windowContent*10 + 4;
-			updateWindow();
+			refreshWindow();
 		}
 		if(e.getSource()==fiveButton) {
+			hideStartZero();
 			windowText+=5;
-			//windowContent = windowContent*10 + 5;
-			updateWindow();
+			refreshWindow();
 		}
 		if(e.getSource()==sixButton) {
+			hideStartZero();
 			windowText+=6;
-			//windowContent = windowContent*10 + 6;
-			updateWindow();
+			refreshWindow();
 		}
 		if(e.getSource()==sevenButton) {
+			hideStartZero();
 			windowText+=7;
-			//windowContent = windowContent*10 + 7;
-			updateWindow();
+			refreshWindow();
 		}
 		if(e.getSource()==eightButton) {
+			hideStartZero();
 			windowText+=8;
-			//windowContent = windowContent*10 + 8;
-			updateWindow();
+			refreshWindow();
 		}
 		if(e.getSource()==nineButton) {
+			hideStartZero();
 			windowText+=9;
-			//windowContent = windowContent*10 + 9;
-			updateWindow();
+			refreshWindow();
 		}
 		if(e.getSource()==backspaceButtom) {
 			windowText = removeLastChar(windowText);
-			//windowContent = (windowContent-windowContent%10)/10;
-			//if(windowContent == 0) {numberInWindowIs0 = true;}
-			updateWindow();
+			refreshWindow();
 		}
 		if(e.getSource()==clearEntryButtom) {
 			windowText = "0";
-			//windowContent = 0;
-			//numberInWindowIs0 = true;
-			updateWindow();
+			refreshWindow();
 		}
 		if(e.getSource()==clearButton) {
 			restartProgram();
-			updateWindow();
-			windowHelp.setText("");
+			helpBoxLabel.setText("");
+			refreshWindow();
 		}
 		if(e.getSource()==plusButton) {
 			checkOption();
 			operator = "+";
-			windowHelp.setText(Integer.toString((int)numberInMemory)+operator);
+			refreshHelpBox();
 		}
 		if(e.getSource()==minusButton) {
 			checkOption();
 			operator = "-";
-			windowHelp.setText(Integer.toString((int)numberInMemory)+operator);
+			refreshHelpBox();
 		}
 		if(e.getSource()==divisionButton) {
 			checkOption();
 			operator = "/";
-			windowHelp.setText(Integer.toString((int)numberInMemory)+operator);
+			refreshHelpBox();
 		}
 		if(e.getSource()==multiplicationButton) {
 			checkOption();
 			operator = "*";
-			windowHelp.setText(Integer.toString((int)numberInMemory)+operator);
+			refreshHelpBox();
 		}
 		if(e.getSource()==squareButton) {
-			windowHelp.setText(numberInMemory+operator+Integer.toString((int)windowContent)+"²");
-			windowLabel.setText(Integer.toString((int)square(windowContent)));
+			//helpBoxLabel.setText(numberInMemory+operator+Double.toString(windowContent)+"²");
+			windowText = Double.toString(square(windowContent));
+			refreshWindow();
 		}
 		if(e.getSource()==elementButton) {
-			windowHelp.setText(numberInMemory+operator+"√("+Integer.toString((int)windowContent)+")");
-			windowLabel.setText(Integer.toString((int)element(windowContent)));
+			//helpBoxLabel.setText(numberInMemory+operator+"√("+Double.toString(windowContent)+")");
+			//windowLabel.setText(Double.toString(element(windowContent)));
 		}
 		if(e.getSource()==equalButton) {
 			equal();
-			windowHelp.setText(Integer.toString((int)numberInMemory)+operator);
+			helpBoxLabel.setText(Double.toString(numberInMemory)+operator);
 		}
 		if(e.getSource()==dotButtom) {
-			windowLabel.setText(Double.toString(windowContent));
+			if(windowText.contains(".")==false) {
+				windowText+=".";
+			}
+			refreshWindow();
 		}
 	}
 
 	private void checkOption() {
 		//Checks 1 of 3 options every time we use it.
 		//1) if there is was no sign before, it safes window content to memory.
+		windowText = "0";
 		if(operator=="") {
 			saveNumberInMemory();
 		} else {
@@ -285,13 +283,18 @@ public class Frame extends JFrame implements ActionListener{
 
 	private void sendResult() {
 		//Pops out result of mathematical operation to the window.
-		windowLabel.setText(Integer.toString((int)numberInMemory));
+		windowLabel.setText(Double.toString(numberInMemory));
 	}
 	
-	private void updateWindow() {
+	private void refreshWindow() {
 		//Refreshes window content.
 		windowLabel.setText(windowText);
-		windowContent = Integer. parseInt(windowText);
+		windowContent = Double.parseDouble(windowText);
+	}
+	
+	private void refreshHelpBox() {
+		//Refreshes helpBox content.
+		helpBoxLabel.setText(Double.toString(numberInMemory)+operator);
 	}
 
 	private void saveNumberInMemory() {
@@ -303,27 +306,24 @@ public class Frame extends JFrame implements ActionListener{
 	private void equal() {
 		//Checks for actual operator case,
 		//and makes number from memory, window and sign between them equal. 
+		oneNumberOption();
 		switch(operator) {
 			case "+":
-				oneNumberOption();
 				numberInMemory = sum(numberInMemory, windowContent);
 				sendResult();
 				setWindowTo0();
 				break;
 			case "-":
-				oneNumberOption();
 				numberInMemory = difference(numberInMemory, windowContent);
 				sendResult();
 				setWindowTo0();
 				break;
 			case "*":
-				oneNumberOption();
 				numberInMemory = product(numberInMemory, windowContent);
 				sendResult();
 				setWindowTo0();
 				break;
 			case "/":
-				oneNumberOption();
 				try {
 					numberInMemory = quotient(numberInMemory, windowContent);
 					//To avoid divide  by 0, there is some ArithmeticExpection. 
@@ -336,10 +336,13 @@ public class Frame extends JFrame implements ActionListener{
 					restartProgram();
 					break;
 				}
-				windowLabel.setText(Double.toString(numberInMemory));
+				sendResult();
 				setWindowTo0();
 				break;
 		}
+	}
+	private void hideStartZero() {
+		if(windowText=="0") {windowText = "";}
 	}
 	
 	private void setWindowTo0() {
@@ -358,13 +361,14 @@ public class Frame extends JFrame implements ActionListener{
 		windowContent = 0;
 		numberInMemory = 0;
 		operator = "";
-		windowHelpContent = "";
+		helpBoxText = "";
+		windowText = "0";
 		numberInWindowIs0 = true;
 	}
 	
 	public static String removeLastChar(String str) {
 		//Removes last char from string
-	    return (str == "0" || str.length() == 0) ? "0" : (str.substring(0, str.length() - 1));
+	    return (str == "0" || str.length() == 1) ? "0" : (str.substring(0, str.length() - 1));
 	}
 	
 	//There are some mathematical functions.
